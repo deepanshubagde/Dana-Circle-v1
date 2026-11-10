@@ -2,5 +2,7 @@
   "name": "Dana Circle",
   "description": "Serene Buddhist-inspired community donation portal with live Sangha impact ledger and AI receipt extraction.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
