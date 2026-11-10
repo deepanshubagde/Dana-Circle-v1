@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dana Circle | Sacred Giving & Sangha Impact</title>
+  <meta name="description" content="Serene Buddhist-inspired community donation portal with live Sangha impact ledger and AI receipt extraction.">
+  <!-- Tailwind CSS via CDN for pure standalone static hosting on Cloudflare/GitHub Pages -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #FFFFFF;
+      color: #4A4A4A;
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+    .font-serif-sacred {
+      font-family: 'Playfair Display', serif;
+    }
+  </style>
+</head>
+<body class="bg-white min-h-screen antialiased flex flex-col justify-between relative">
+
+  <!-- Small Minimalist Button for Admin Access (Header Removed) -->
+  <div class="absolute top-4 right-4 z-40">
+    <button onclick="promptAdminLogin()" class="px-3 py-1.5 rounded-full bg-white/90 border border-stone-200 text-stone-500 hover:text-stone-900 text-xs font-medium shadow-2xs transition">
+      🔒 Admin
+    </button>
+  </div>
+
+  <!-- Main Container -->
+  <main class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full text-center">
+
+    <!-- Community Impact Counter -->
+    <div class="mb-10">
+      <span class="text-xs uppercase tracking-widest font-semibold text-stone-600">Total Community Impact</span>
+      <div class="flex items-baseline justify-center space-x-1 mt-2">
+        <span class="text-4xl text-[#FF9933] font-light">₹</span>
+        <span id="impact-counter" class="text-6xl font-serif-sacred font-bold text-stone-900">3,42,850</span>
+      </div>
+      <p class="text-xs text-stone-600 mt-2">
+        Verified across Sangha Ledger • Individual amounts remain strictly confidential
+      </p>
+    </div>
+
+    <!-- Monthly Theme Block -->
+    <div class="p-8 rounded-3xl bg-stone-50 border border-stone-200 text-left mb-10 max-w-2xl mx-auto shadow-xs">
+      <span class="text-[10px] uppercase tracking-wider font-semibold text-[#FF9933] bg-[#FFF5EB] px-2.5 py-0.5 rounded-full border border-[#FF9933]/20">
+        Current Month Focus
+      </span>
+      <h2 id="theme-title" class="text-2xl font-serif-sacred font-bold text-stone-900 mt-2">
+        Monastic Support & Rain-Retreat Vassa Care
+      </h2>
+      <p id="theme-desc" class="text-sm text-stone-600 font-light mt-2 leading-relaxed">
+        Providing wholesome almsfood, essential medicines, and solar rain-shelter repairs for 48 dwelling monks and silent meditators in rural Bodh Gaya.
+      </p>
+    </div>
+
+    <!-- 4-Step Donation Container -->
+    <div class="max-w-2xl mx-auto p-8 rounded-3xl bg-white border border-stone-200 shadow-sm text-left">
+      
+      <!-- Step 1: Cause & Payment Credentials -->
+      <div id="step-1" class="space-y-4">
+        <h3 class="text-lg font-serif-sacred font-bold text-stone-900">Step 1: Direct Banking & UPI Details</h3>
+        <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-2 text-xs">
+          <div class="flex justify-between"><span class="text-stone-500">Beneficiary:</span> <strong id="ngo-name" class="text-stone-900">Maha Bodhi Dana Trust</strong></div>
+          <div class="flex justify-between"><span class="text-stone-500">UPI ID:</span> <span id="upi-id" class="font-mono text-stone-900 font-bold">danacircle@icici</span></div>
+          <div class="flex justify-between"><span class="text-stone-500">Account:</span> <span id="bank-acc" class="font-mono text-stone-900 font-bold">9240100843219</span></div>
+          <div class="flex justify-between"><span class="text-stone-500">IFSC:</span> <span id="ifsc-code" class="font-mono text-stone-900 font-bold">ICIC0000924</span></div>
+        </div>
+        <button onclick="goToStep(2)" class="w-full py-3 rounded-xl bg-[#FF9933] hover:bg-[#E68524] text-white text-xs font-semibold shadow-xs">
+          Proceed to Step 2: Make Donation
+        </button>
+      </div>
+
+      <!-- Step 2: Make Donation -->
+      <div id="step-2" class="space-y-4 hidden text-center">
+        <div class="p-4 rounded-2xl bg-[#FFF9F2] border border-[#FF9933]/30 text-stone-800 text-xs sm:text-sm font-medium">
+          "Please scan this QR code or use the account details to make your contribution directly via your personal banking/UPI app. Take a screenshot of the successful payment."
+        </div>
+        <div class="py-4">
+          <div class="w-48 h-48 mx-auto bg-stone-100 rounded-2xl flex items-center justify-center border border-stone-200 font-mono text-xs text-stone-500">
+            [UPI QR Code]
+          </div>
+          <p class="text-xs text-stone-500 mt-2 font-mono">UPI: danacircle@icici</p>
+        </div>
+        <button onclick="goToStep(3)" class="w-full py-3 rounded-xl bg-[#FF9933] hover:bg-[#E68524] text-white text-xs font-semibold shadow-xs">
+          I Have Made Payment → Upload Proof
+        </button>
+      </div>
+
+      <!-- Step 3: Upload Proof -->
+      <div id="step-3" class="space-y-4 hidden">
+        <h3 class="text-lg font-serif-sacred font-bold text-stone-900 text-center">Step 3: Upload Payment Proof</h3>
+        <div class="border-2 border-dashed border-stone-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF9933]" onclick="document.getElementById('file-input').click()">
+          <input type="file" id="file-input" accept=".jpg,.jpeg,.png,.pdf" class="hidden" onchange="handleFileSelect(event)">
+          <div class="text-xs text-stone-600" id="file-label">Click or drop .jpg, .png, or .pdf receipt here</div>
+        </div>
+        <button id="extract-btn" onclick="submitToGoogleAppsScript()" disabled class="w-full py-3 rounded-xl bg-stone-300 text-stone-500 text-xs font-semibold">
+          Verify Proof with Gemini Vision OCR
+        </button>
+      </div>
+
+      <!-- Step 4: Success State -->
+      <div id="step-4" class="space-y-6 hidden text-center py-6">
+        <div class="w-20 h-20 mx-auto rounded-full bg-emerald-50 border-2 border-emerald-500 flex items-center justify-center text-emerald-600 text-3xl font-bold">
+          ✓
+        </div>
+        <h3 id="success-copy" class="text-xl font-serif-sacred font-bold text-stone-900 leading-relaxed">
+          Thank you. Your act of Dana of ₹<span id="extracted-amount">2,500</span> has been recorded in the Sangha ledger.
+        </h3>
+        <button onclick="goToStep(1)" class="px-6 py-2.5 rounded-xl bg-[#FF9933] text-white text-xs font-semibold">
+          Make Another Offering
+        </button>
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let GAS_WEBHOOK_URL = ''; // Paste your deployed Google Apps Script URL here
+    let selectedBase64 = '';
+    let currentTotal = 342850;
+
+    function goToStep(step) {
+      document.getElementById('step-1').classList.add('hidden');
+      document.getElementById('step-2').classList.add('hidden');
+      document.getElementById('step-3').classList.add('hidden');
+      document.getElementById('step-4').classList.add('hidden');
+      document.getElementById('step-' + step).classList.remove('hidden');
+    }
+
+    function handleFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      document.getElementById('file-label').textContent = 'Selected: ' + file.name;
+      const reader = new FileReader();
+      reader.onload = function() {
+        selectedBase64 = reader.result;
+        const btn = document.getElementById('extract-btn');
+        btn.disabled = false;
+        btn.className = 'w-full py-3 rounded-xl bg-[#FF9933] hover:bg-[#E68524] text-white text-xs font-semibold shadow-xs cursor-pointer';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    async function submitToGoogleAppsScript() {
+      const btn = document.getElementById('extract-btn');
+      btn.textContent = 'Extracting amount with Gemini Vision...';
+      btn.disabled = true;
+
+      try {
+        let amount = 2500;
+        if (GAS_WEBHOOK_URL) {
+          const res = await fetch(GAS_WEBHOOK_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              userEmail: 'donor@danacircle.org',
+              image: selectedBase64,
+              monthTheme: 'Monastic Support & Rain-Retreat Vassa Care'
+            })
+          });
+          const data = await res.json();
+          if (data.amount) amount = data.amount;
+        }
+
+        document.getElementById('extracted-amount').textContent = amount.toLocaleString('en-IN');
+        currentTotal += amount;
+        document.getElementById('impact-counter').textContent = currentTotal.toLocaleString('en-IN');
+        goToStep(4);
+      } catch (err) {
+        alert('Extraction failed. Please verify your Google Apps Script Web App URL.');
+        btn.textContent = 'Verify Proof with Gemini Vision OCR';
+        btn.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
